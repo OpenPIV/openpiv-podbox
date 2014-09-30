@@ -1074,7 +1074,7 @@ try
 
     handles.N = length(handles.files); % number of files selected
     if  handles.N > 0
-        [handles.path,fname,extension,junk] = fileparts(handles.files{1});
+        [handles.path,fname,extension,~] = fileparts(handles.files{1});
         set(handles.fig,'pointer','watch');
     else
         return

@@ -124,8 +124,8 @@ data(data>9e9) = 0;
 
 i = findstr(hdr,'i=');
 j = findstr(hdr,'j=');
-[i,junk] = strtok(hdr(i+2:end));
-[j,junk] = strtok(hdr(j+2:end));
+[i,~] = strtok(hdr(i+2:end));
+[j,~] = strtok(hdr(j+2:end));
 
 i = eval(i); j = eval(j);
 

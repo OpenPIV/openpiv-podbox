@@ -47,7 +47,7 @@ switch step
                 R = Uf*Uf';
         end
         % Eigenvalue problem:
-%        [junk,D,V] = svds(R,min(len*2,N));
+%        [~,D,V] = svds(R,min(len*2,N));
        [V,D] = eig(R);
        clear R
        [L,I] = sort(diag(D)/N);
