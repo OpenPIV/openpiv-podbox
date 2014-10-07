@@ -6,52 +6,52 @@ global orighandles current_path;
 if nargin == 0
     current_path = cd;
     addpath(current_path);
-
+    
     fig = openfig(mfilename,'reuse','invisible');
     movegui(fig,'center')
     set(fig,'DockControls','off');
-
+    
     handles = guihandles(fig);
-
+    
     handles.inst_list = '-|u|v|(u^2+v^2)^(1/2)|vorticity|sxx=du/dx|du/dy|dv/dx|syy=dv/dy|du/dx+dv/dy|sxy';
-
+    
     handles.fig = fig;
     handles.previous_quantity = '-';
     handles.multimode = 1;
     handles.SelectedModes = 1;
     orighandles = handles;
     guidata(handles.fig, handles);
-
-
+    
+    
     set(fig,'Color',get(0,'defaultUicontrolBackgroundColor'));
-
+    
     guidata(handles.fig, handles);
-
+    
     if nargout > 0
         varargout{1} = fig;
     end
     set(findobj(handles.fig,'type','uicontrol'),'Enable','Off');
-
+    
     Pos_spat=get(handles.spatial_controls,'Position');
     set(handles.spatial_controls,'Position',...
         [0.95-Pos_spat(3) 0.96-Pos_spat(4) Pos_spat(3) Pos_spat(4)]);
-
+    
     Pos_ctrl=get(handles.select_controls,'Position');
     set(handles.select_controls,'Position',...
         [0.95-Pos_spat(3) 0.96-Pos_ctrl(4) Pos_spat(3) Pos_ctrl(4)]);
-
+    
     Pos_energy=get(handles.uipanel_relEnergy,'Position');
     set(handles.uipanel_relEnergy,'Position',...
         [0.95-Pos_spat(3) 0.93-Pos_ctrl(4)-Pos_energy(3) Pos_spat(3) Pos_energy(4)]);
-
+    
     Pos_plot=get(handles.uipanel_plotoptions,'Position');
     set(handles.uipanel_plotoptions,'Position',...
         [0.95-Pos_spat(3) 0.93-Pos_ctrl(4)-Pos_energy(4)-0.14 Pos_spat(3) Pos_plot(4)]);
-
+    
     set(handles.fig,'Visible','on');
-
+    
 elseif ischar(varargin{1})
-
+    
     try
         if (nargout)
             [varargout{1:nargout}] = feval(varargin{:});
@@ -61,7 +61,7 @@ elseif ischar(varargin{1})
     catch
         disp(lasterr);
     end
-
+    
 end
 warning off
 
@@ -84,9 +84,9 @@ function checkbox_arrow_color_Callback(hObject, eventdata, handles)
 if (get(hObject,'Value') == 1)
     handles.color = 1;
 else
-
+    
     handles.color = 0;
-
+    
     set(handles.color_quiver,'Visible','off');
 end
 
@@ -106,10 +106,10 @@ if get(handles.checkbox_modes,'Value' ) == 1
             set(handles.pushbutton_set_clim,'Visible','Off');
             handles.alltodisp = 0;
             handles.allfields = 0;
-
+            
         case 2
             handles.units = handles.velUnits;
-
+            
             handles.property = handles.umodes(:,:,handles.current);
         case 3
             handles.units = handles.velUnits;
@@ -124,12 +124,12 @@ if get(handles.checkbox_modes,'Value' ) == 1
             else
                 handles.units = '[1/\Delta t]';
             end
-
+            
             [handles.dudx,handles.dudy] = gradient(handles.umodes(:,:,handles.current),...
                 handles.dx, handles.dy);
             [handles.dvdx,handles.dvdy] = gradient(handles.vmodes(:,:,handles.current),...
                 handles.dx, handles.dy);
-
+            
             handles.property = handles.dvdx - handles.dudy ;
         case 6
             if ~isempty(findstr(handles.velUnits,'s'))
@@ -157,7 +157,7 @@ if get(handles.checkbox_modes,'Value' ) == 1
             end
             [handles.dvdx,handles.dvdy] = gradient(handles.vmodes(:,:,handles.current),...
                 handles.dx, handles.dy);
-
+            
             handles.property = handles.dvdx;
         case 9
             if ~isempty(findstr(handles.velUnits,'s'))
@@ -178,7 +178,7 @@ if get(handles.checkbox_modes,'Value' ) == 1
                 handles.dx, handles.dy);
             [handles.dvdx,handles.dvdy] = gradient(handles.vmodes(:,:,handles.current),...
                 handles.dx, handles.dy);
-
+            
             handles.property = handles.dudx + handles.dvdy;
         case 11 % s_xy
             if ~isempty(findstr(handles.velUnits,'s'))
@@ -190,12 +190,12 @@ if get(handles.checkbox_modes,'Value' ) == 1
                 handles.dx, handles.dy);
             [handles.dvdx,handles.dvdy] = gradient(handles.vmodes(:,:,handles.current),...
                 handles.dx, handles.dy);
-
+            
             handles.property = 0.5*(handles.dvdx + handles.dudy);
     end
-
+    
 elseif (get(handles.checkbox_reconstruction,'Value') == 1 || get(handles.radiobutton_multimode,'Value') == 1)
-
+    
     if get(handles.checkbox_reconstruction,'Value') == 1
         [handles.uRec, handles.vRec] = poduv(handles,3);
     end
@@ -208,19 +208,19 @@ elseif (get(handles.checkbox_reconstruction,'Value') == 1 || get(handles.radiobu
             set(handles.pushbutton_set_clim,'Visible','Off');
             handles.alltodisp = 0;
             handles.allfields = 0;
-
+            
         case 2
             handles.units = handles.velUnits;
             handles.property = handles.uRec;
-
+            
         case 3
             handles.units = handles.velUnits;
             handles.property = handles.vRec;
-
+            
         case 4
             handles.units = handles.velUnits;
             handles.property = sqrt(handles.uRec.^2 + handles.vRec.^2);
-
+            
         case 5
             if ~isempty(findstr(handles.velUnits,'s'))
                 handles.units = '[1/s]'  ;
@@ -376,7 +376,7 @@ if ~isempty(handles.property)
             [handles.C,handles.CH] = contour('v6',handles.x,handles.y,filter2(kernel,handles.property,'same'),handles.numcolors);
             set(handles.CH,'edgecolor','black');
     end
-
+    
     %     handles.climit_prev = get(gca,'clim');
     if handles.alltodisp == 1
         set(gca,'CLim',handles.climit);
@@ -393,7 +393,7 @@ if ~isempty(handles.property)
             clabel(handles.C,handles.CH,'Color','b','Rotation',0);
         end;
     end
-
+    
     if handles.colorbar_flag
         handles.colorbar = colorbar('v6','peer',handles.axes_main);
     end
@@ -427,7 +427,7 @@ if get(handles.checkbox_arrow,'Value') == 1
         else
             handles.quiver = quiver(handles.x,handles.y,handles.umodes(:,:,handles.current),handles.vmodes(:,:,handles.current),handles.arrow_scale,'k');
         end
-
+        
     end
     hold off;
 end
@@ -442,7 +442,7 @@ if isfield(handles,'colorbar') & get(handles.checkbox_colorbar,'Value') == 1
     axpos = get(handles.axes_main,'Position');
     set(handles.colorbar,'Units','normalized','Position',[axpos(1)+axpos(3)+0.018+0.04,axpos(2),0.020,axpos(4)]);
     set(handles.axes_main,'Position',[axpos(1),axpos(2),axpos(3)+0.04,axpos(4)]);
-
+    
 end
 box( handles.axes_main,'on');
 guidata(handles.fig,handles);
@@ -538,7 +538,7 @@ if isnan(tmp)
 end
 
 if get(handles.checkbox_modes,'Value') == 1
-
+    
     if tmp > 0 & tmp <= handles.numOfModes
         handles.current = tmp;
         guidata(handles.fig,handles);
@@ -600,7 +600,7 @@ if get(handles.pushbutton_animate,'Value') == 1
         end
     end
 else
-
+    
 end
 set(handles.pushbutton_animate,'Value',0);
 
@@ -616,7 +616,7 @@ if get(handles.pushbutton_save_movie,'Value') == 1
         return
     end
     handles.mov = avifile(file{1},'compression','none','quality',100,'fps',15);
-
+    
     startpoint = handles.current;
     if get(handles.checkbox_modes,'Value') == 1
         for i = startpoint:handles.numOfModes
@@ -645,12 +645,12 @@ if get(handles.pushbutton_save_movie,'Value') == 1
             handles.mov = addframe(handles.mov,F);
         end
     end
-
+    
     if isfield(handles,'mov')
         handles.mov = close(handles.mov);
         handles = rmfield(handles,'mov');
     end
-
+    
 end
 set(handles.pushbutton_save_movie,'Value',0);
 
@@ -659,7 +659,7 @@ function varargout = checkbox_label_Callback(h, eventdata, handles, varargin)
 if (get(h,'Value') == get(h,'Max'))
     if get(handles.popupmenu_contour_type,'Value')>1
         handles.labelit = 1;
-
+        
         clabel(handles.C,handles.CH,'Color','b','Rotation',0);
         guidata(handles.fig,handles);
     else
@@ -754,7 +754,7 @@ switch val
                         handles.cmin = min(handles.cmin,min(tmp(:)));
                         handles.cmax = max(handles.cmax,max(tmp(:)));
                     end
-
+                    
                 case 8
                     handles.cmin = Inf;
                     handles.cmax = -Inf;
@@ -773,7 +773,7 @@ switch val
                         handles.cmin = min(handles.cmin,min(tmp(:)));
                         handles.cmax = max(handles.cmax,max(tmp(:)));
                     end
-
+                    
                 case 10
                     handles.cmin = Inf;
                     handles.cmax = -Inf;
@@ -801,7 +801,7 @@ switch val
                     handles.cmin = 0;
                     handles.cmax = 1;
                 case 2
-
+                    
                     handles.cmin = Inf;
                     handles.cmax = -Inf;
                     tmpcounter = handles.current;
@@ -812,7 +812,7 @@ switch val
                         handles.cmax = max(handles.cmax,max(handles.uRec(:)));
                     end
                     handles.current = tmpcounter;
-
+                    
                 case 3
                     handles.cmin = Inf;
                     handles.cmax = -Inf;
@@ -824,7 +824,7 @@ switch val
                         handles.cmax = max(handles.cmax,max(handles.vRec(:)));
                     end
                     handles.current = tmpcounter;
-
+                    
                 case 4
                     handles.cmin = Inf;
                     handles.cmax = -Inf;
@@ -837,7 +837,7 @@ switch val
                         handles.cmax = max(handles.cmax,max(tmp(:)));
                     end
                     handles.current = tmpcounter;
-
+                    
                 case 5
                     handles.cmin = Inf;
                     handles.cmax = -Inf;
@@ -858,7 +858,7 @@ switch val
                     tmpcounter = handles.current;
                     for i = 1:handles.N
                         handles.current = i;
-
+                        
                         [handles.uRec, handles.vRec] = poduv(handles,3);
                         [dudx,dudy] = gradient(handles.uRec,handles.dx, handles.dy);
                         [dvdx,dvdy] = gradient(handles.vRec,handles.dx, handles.dy);
@@ -873,7 +873,7 @@ switch val
                     tmpcounter = handles.current;
                     for i = 1:handles.N
                         handles.current = i;
-
+                        
                         [handles.uRec, handles.vRec] = poduv(handles,3);
                         [dudx,dudy] = gradient(handles.uRec,handles.dx, handles.dy);
                         [dvdx,dvdy] = gradient(handles.vRec,handles.dx, handles.dy);
@@ -973,7 +973,7 @@ if get(handles.checkbox_modes,'Value') == 1
     handles.alltodisp = 0;
     handles.allfields = 0;
     set(handles.popupmenu_eachfield,'String','Each Field|All to Display|All Fields|Manual');
-
+    
     handles.current = 1;
     set(handles.edit_current,'String',handles.current);
     set(handles.pushbutton_previous,'Enable','on');
@@ -981,7 +981,7 @@ if get(handles.checkbox_modes,'Value') == 1
     set(handles.pushbutton_animate,'Enable','on');
     set(handles.pushbutton_save_movie,'Enable','on');
     set(handles.edit_current,'Enable','on');
-
+    
 end
 set(handles.popupmenu_eachfield,'String','Each Field|All to Display|All Fields|Manual');
 
@@ -1058,9 +1058,9 @@ try
     fileTypes = {'*.txt', 'OpenPIV TXT files'
         '*.vec', 'Insight 3G VEC files'
         '*.mat', 'SpatialToolbox MAT files'};
-
+    
     [handles.files] = uipickfiles('Type',fileTypes);
-
+    
     %     handles.N = length(gui_files);
     %     if  handles.N >= 1
     %         handles.files = gui_files;
@@ -1071,7 +1071,7 @@ try
     %         set(handles.fig,'pointer','arrow');
     %         return
     %     end
-
+    
     handles.N = length(handles.files); % number of files selected
     if  handles.N > 0
         [handles.path,~,extension] = fileparts(handles.files{1});
@@ -1079,11 +1079,11 @@ try
     else
         return
     end
-
+    
     switch(extension)
         case{'.vec'}
             [handles.xUnits,handles.velUnits,d] = vecread(handles.files{1});
-            [rows,cols,k] = size(d);
+            [rows,cols,~] = size(d);
             [handles.u,handles.v] = deal(zeros(rows,cols,handles.N));
             handles.x           = d(:,:,1);
             handles.y           = d(:,:,2);
@@ -1094,50 +1094,50 @@ try
                 handles.u(:,:,i) = d(:,:,3);
                 handles.v(:,:,i) = d(:,:,4);
             end
-
+            
         case{'.txt'}
-                d = load(handles.files{1});
-                d = repmat(d,[1 1 handles.N]);
-                for i = 2:handles.N
-                    d(:,:,i) = load(handles.files{i});
+            d = load(handles.files{1});
+            d = repmat(d,[1 1 handles.N]);
+            for i = 2:handles.N
+                d(:,:,i) = load(handles.files{i});
+            end
+            
+            x = d(:,1,:);
+            x = x(x~=0);
+            unX = unique(x);
+            
+            minX = min(unX);
+            maxX = max(unX);
+            dX = ceil((maxX-minX)/(length(unX)-1));
+            
+            y = d(:,2,:);
+            y = y(y~=0);
+            unY = unique(y);
+            
+            minY = min(unY);
+            maxY = max(unY);
+            dY = ceil((maxY-minY)/(length(unY)-1));
+            
+            [handles.x,handles.y] = meshgrid(minX:dX:maxX,minY:dY:maxY);
+            [rows,cols] = size(handles.x);
+            
+            [handles.u,handles.v] = deal(zeros(rows,cols,handles.N+1)); % 11.04.04, Alex
+            
+            for i = 1:handles.N
+                x = d(:,1,i);
+                tmp = d(x~=0,:,i);
+                y = tmp(:,2);
+                x = tmp(:,1);
+                for j = 1:length(x)
+                    [m,n] = find(handles.x == x(j) & handles.y == y(j));
+                    handles.u(m,n,i) = tmp(j,3);
+                    handles.v(m,n,i) = tmp(j,4);
                 end
-
-                x = d(:,1,:);
-                x = x(x~=0);
-                unX = unique(x);
-
-                minX = min(unX);
-                maxX = max(unX);
-                dX = ceil((maxX-minX)/(length(unX)-1));
-
-                y = d(:,2,:);
-                y = y(y~=0);
-                unY = unique(y);
-
-                minY = min(unY);
-                maxY = max(unY);
-                dY = ceil((maxY-minY)/(length(unY)-1));
-
-                [handles.x,handles.y] = meshgrid(minX:dX:maxX,minY:dY:maxY);
-                [rows,cols] = size(handles.x);
-
-                [handles.u,handles.v] = deal(zeros(rows,cols,handles.N+1)); % 11.04.04, Alex
-
-                for i = 1:handles.N
-                    x = d(:,1,i);
-                    tmp = d(x~=0,:,i);
-                    y = tmp(:,2);
-                    x = tmp(:,1);
-                    for j = 1:length(x)
-                        [m,n] = find(handles.x == x(j) & handles.y == y(j));
-                        handles.u(m,n,i) = tmp(j,3);
-                        handles.v(m,n,i) = tmp(j,4);
-                    end
-                end
-
-                handles.xUnits = 'pix';
-                handles.velUnits = 'pix/dt';
-
+            end
+            
+            handles.xUnits = 'pix';
+            handles.velUnits = 'pix/dt';
+            
         case{'.mat'}
             tmp = load(handles.files{1}); % should be only one file
             handles.x = tmp.x;
@@ -1160,12 +1160,11 @@ try
             handles.xUnits = tmp.xUnits;
             handles.velUnits = tmp.velUnits;
             clear tmp
-
+            
         otherwise
             
     end % of switch
 catch
-    keyboard
     warndlg('Something wrong with vector files','Error','modal');
     set(handles.fig,'pointer','arrow');
     return
@@ -1356,6 +1355,8 @@ if bottomrowY<1  bottomrowY=1;
 end
 if uprowY>uprowLimit     uprowY=uprowLimit; end;
 
+
+
 sizeI = size(handles.i,1);
 sizeJ = size(handles.j,1);
 numofcols = rightcolX-leftcolX+1;
@@ -1364,9 +1365,9 @@ numofrows = uprowY-bottomrowY+1;
 
 if ~isempty(handles.previousSel)
     a = handles.previousSel;
-    if ((rightcolX-leftcolX) == a(2)-a(1) & a(2) == rightcolX & handles.rowlock~=1)
+    if ((rightcolX-leftcolX) == a(2)-a(1) && a(2) == rightcolX && handles.rowlock~=1)
         handles.columnlock=1;
-    elseif    ((uprowY-bottomrowY)==a(4)-a(3) & a(4)==uprowY & handles.columnlock~=1)
+    elseif    ((uprowY-bottomrowY)==a(4)-a(3) && a(4)==uprowY && handles.columnlock~=1)
         handles.rowlock=1;
     else
         warndlg('Your Selection is Invalid...','Error','modal');
@@ -1374,16 +1375,18 @@ if ~isempty(handles.previousSel)
         set(handles.region_text,'Visible','off');
         return;
         return;
-    end;
-end;
+    end
+end
 
-if ismember([bottomrowY leftcolX],[handles.i handles.j],'rows') | ismember([bottomrowY rightcolX],[handles.i handles.j],'rows') | ...
-        ismember([uprowY leftcolX],[handles.i handles.j],'rows') | ismember([uprowY rightcolX],[handles.i handles.j],'rows')
-    warndlg('Your Selection is Invalid...','Error','modal');
-    set(findobj(handles.select_controls,'type','uicontrol'),'Enable','On');
-
-    set(handles.region_text,'Visible','off');
-    return;
+if sizeI
+    if ismember([bottomrowY leftcolX],[handles.i handles.j],'rows') || ismember([bottomrowY rightcolX],[handles.i handles.j],'rows') || ...
+            ismember([uprowY leftcolX],[handles.i handles.j],'rows') || ismember([uprowY rightcolX],[handles.i handles.j],'rows')
+        warndlg('Your Selection is Invalid...','Error','modal');
+        set(findobj(handles.select_controls,'type','uicontrol'),'Enable','On');
+        
+        set(handles.region_text,'Visible','off');
+        return;
+    end
 end
 
 for i1 = bottomrowY:uprowY
@@ -1549,7 +1552,7 @@ if autoscale,
     else
         maxlen = 0;
     end
-
+    
     if maxlen>0
         autoscale = autoscale*0.9 / maxlen;
     else
@@ -1580,7 +1583,7 @@ if plotarrows,
     hold on
     z = [z(1,:); z];
     h2 = patch([hu(:),hu(:)],[hv(:),hv(:)], [z(:),z(:)],'Parent',ax,'EdgeColor','Flat','FaceColor','None');
-
+    
 else
     h2 = [];
 end
@@ -1632,52 +1635,52 @@ function pushbutton_start_Callback(hObject, eventdata, handles)
 
 
 if ~isempty(handles.i)
-
+    
     size_x = size(handles.x);
-
+    
     sel_row_start = size_x(1) - handles.i(length(handles.i))+1;
     sel_row_end   = size_x(1) - handles.i(1)+1;
-
+    
     handles.x = handles.x(sel_row_start:sel_row_end, handles.j(1):handles.j(length(handles.j)) );
     handles.y = handles.y(sel_row_start:sel_row_end, handles.j(1):handles.j(length(handles.j)) );
     handles.u = handles.u(sel_row_start:sel_row_end, handles.j(1):handles.j(length(handles.j)),: );
     handles.v = handles.v(sel_row_start:sel_row_end, handles.j(1):handles.j(length(handles.j)),:);
-
+    
     if min(size(handles.x)) < 2
         warndlg('The region is N x 1, select at least 2 rows or 2 columns','Error','modal');
         return
     end
-
+    
     set(handles.pushbutton_reset,'Enable','off');
-
+    
     handles.METHOD_FLAG = get(handles.checkbox_DirectSnapshot,'Value');
-
+    
     clear pod
     try
         [L] = poduv(handles,1);
     catch
         warndlg('Computation of POD modes failed due to memory problem');
     end
-
+    
     axes(handles.axes_main);
     set(handles.export2figure,'Enable','on');
     delete(get(handles.axes_main,'children'));
     handles.Erel = cumsum(L(1:end))/sum(L(1:end));
     plot(1:length(handles.Erel),handles.Erel*100)
-
+    
     set(handles.checkbox_DirectSnapshot,'Enable','off');
     set(handles.pushbutton_start,'Enable','off');
-
-
+    
+    
     set(get(handles.axes_main,'xlabel'),'string','Number of modes')
     set(get(handles.axes_main,'ylabel'),'string','Cummulative relative energy, %')
-
+    
     set(handles.uipanel_relEnergy,'Visible','On');
     set(get(handles.uipanel_relEnergy,'Children'),'Visible','On','Enable','On');
-
+    
     set(handles.uipanel_plotoptions,'Visible','On');
     set(get(handles.uipanel_plotoptions,'Children'),'Visible','On','Enable','On');
-
+    
     handles.relEnergy = max(handles.Erel);
     set(handles.edit_relEnergy,'String',num2str(100*handles.relEnergy));
     set(handles.edit_numOfModes,'String',num2str(length(L)));
@@ -1876,7 +1879,7 @@ else
         handles.uRec = sum(handles.umodes(:,:,handles.multimode),3);
         handles.vRec = sum(handles.vmodes(:,:,handles.multimode),3);
         %         handles.vRec = sum(handles.vmodes(:,:,handles.multimode(1):handles.multimode(2)),3);
-
+        
     else
         [handles.uRec,handles.vRec] = poduv(handles,4);
     end
