@@ -1,8 +1,5 @@
-openpiv-podbox
-==============
-
 OpenPIV Proper Orthogonal Decomposition (POD) Toolbox
-
+=====================================================
 
 Proper Orthogonal Decomposition (POD) or Principal Component Analysis (PCA) http://en.wikipedia.org/wiki/Principal_component_analysis is an objective method to extract the most energetic structures from numerical or experimental data, in our case of fluid mechanics. The toolbox was originally developed by the OpenPIV group for the use with the Matlab (tm) version of OpenPIV in 2000, then for the use with Insight (tm) software by TSI Inc. (www.tsi.com). At present it can read the PIV data from OpenPIV (TXT ASCII files), Insight (VEC format) or OpenPIV Spatial Toolbox MAT files. The toolbox can estimate the POD modes using direct or snapshots method and it provides an extra layer of fluid dynamics insight using the linear combination of the POD modes, enabling the coherent structures detection and characterization. For the details, see the article listed below.
 
