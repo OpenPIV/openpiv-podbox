@@ -1074,7 +1074,7 @@ try
 
     handles.N = length(handles.files); % number of files selected
     if  handles.N > 0
-        [handles.path,fname,extension,~] = fileparts(handles.files{1});
+        [handles.path,~,extension] = fileparts(handles.files{1});
         set(handles.fig,'pointer','watch');
     else
         return
@@ -1165,6 +1165,7 @@ try
             
     end % of switch
 catch
+    keyboard
     warndlg('Something wrong with vector files','Error','modal');
     set(handles.fig,'pointer','arrow');
     return
