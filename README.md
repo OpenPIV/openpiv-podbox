@@ -17,8 +17,8 @@ Open Matlab, add the toolbox to the path using ```addpath''' or the graphical in
 
     >> podbox 
     
-The directory includes the folder ```/test''' with a small set of VEC files. In order to start the program, go to the 
-menu ```Load''' and change the type of the files to Insight VEC files, enter the folder ```/test''', select all the files and press ``` Add ->'''
+The directory includes the folder ```/test''' with a small set of VEC files. Please follow the detailed Getting Started manual in the ```/docs''' directory
+
 
 
 
