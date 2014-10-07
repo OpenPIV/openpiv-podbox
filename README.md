@@ -20,24 +20,24 @@ Use Bibtex:
 
 
 
-@article{Gurka2006416,
-title = "\{POD\} of vorticity fields: A method for spatial characterization of coherent structures ",
-journal = "International Journal of Heat and Fluid Flow ",
-volume = "27",
-number = "3",
-pages = "416 - 423",
-year = "2006",
-note = "",
-issn = "0142-727X",
-doi = "http://dx.doi.org/10.1016/j.ijheatfluidflow.2006.01.001",
-url = "http://www.sciencedirect.com/science/article/pii/S0142727X06000026",
-author = "Roi Gurka and Alexander Liberzon and Gad Hetsroni",
-keywords = "Boundary layer",
-keywords = "Vorticity",
-keywords = "Proper orthogonal decomposition",
-keywords = "Coherent structures",
-keywords = "Identification ",
-abstract = "We present a method to identify large scale coherent structures, in turbulent flows, and characterize them. The method is based on the linear combination of the proper orthogonal decomposition (POD) modes of vorticity. Spanwise vorticity is derived from the two-dimensional and two-component velocity fields measured by means of particle image velocimetry (PIV) in the streamwise–wall normal plane of a fully developed turbulent boundary layer in a flume. The identification method makes use of the whole data set simultaneously, through the two-point correlation tensor, providing a statistical description of the dominant coherent motions in a turbulent boundary layer. The identified pattern resembles an elongated, quasi-streamwise, vortical structure with streamwise length equal to the water height in the flume and inclined upwards in the streamwise–wall normal plane at angle of approximately 8°. "
-}
+    @article{Gurka2006416,
+    title = "\{POD\} of vorticity fields: A method for spatial characterization of coherent structures ",
+    journal = "International Journal of Heat and Fluid Flow ",
+    volume = "27",
+    number = "3",
+    pages = "416 - 423",
+    year = "2006",
+    note = "",
+    issn = "0142-727X",
+    doi = "http://dx.doi.org/10.1016/j.ijheatfluidflow.2006.01.001",
+    url = "http://www.sciencedirect.com/science/article/pii/S0142727X06000026",
+    author = "Roi Gurka and Alexander Liberzon and Gad Hetsroni",
+    keywords = "Boundary layer",
+    keywords = "Vorticity",
+    keywords = "Proper orthogonal decomposition",
+    keywords = "Coherent structures",
+    keywords = "Identification ",
+    abstract = "We present a method to identify large scale coherent structures, in turbulent flows, and characterize them. The method is based on the linear combination of the proper orthogonal decomposition (POD) modes of vorticity. Spanwise vorticity is derived from the two-dimensional and two-component velocity fields measured by means of particle image velocimetry (PIV) in the streamwise–wall normal plane of a fully developed turbulent boundary layer in a flume. The identification method makes use of the whole data set simultaneously, through the two-point correlation tensor, providing a statistical description of the dominant coherent motions in a turbulent boundary layer. The identified pattern resembles an elongated, quasi-streamwise, vortical structure with streamwise length equal to the water height in the flume and inclined upwards in the streamwise–wall normal plane at angle of approximately 8°. "
+    }
 
 
