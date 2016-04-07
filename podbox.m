@@ -1477,8 +1477,8 @@ update_gui(gcbo,[],guidata(gcbo));
 
 function figure_pod_CreateFcn(hObject, eventdata, handles)
 
-load CIL_small_logo.mat
-imshow(im,map);
+tmp = load('CIL_small_logo.mat');
+imshow(tmp.im,tmp.map);
 axis off
 
 
