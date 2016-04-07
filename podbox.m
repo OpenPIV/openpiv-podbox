@@ -19,6 +19,9 @@ if nargin == 0
     handles.previous_quantity = '-';
     handles.multimode = 1;
     handles.SelectedModes = 1;
+    if ~isfield(handles,'axes_main')
+        handles.axes_main = get(handles.fig,'CurrentAxes');
+    end
     orighandles = handles;
     guidata(handles.fig, handles);
     
