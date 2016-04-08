@@ -111,7 +111,13 @@ chdata=chdat(char1:count);
 % disappeared, new columns appeared, e.g. datasetauxdata ...
 % variables = hdr(findstr(hdr,'variables=')+length('variables='):findstr(hdr,'zone')-1);
 variables = hdr(findstr(hdr,'variables=')+length('variables='):findstr(hdr,'chc')+4); % '"chc"
-columns = length(findstr(variables,'"'))/2;
+% columns = length(findstr(variables,'"'))/2;
+id = findstr(chdata,[char(13),char(13)]); % double char(13) is a newline
+id = id(1); % only first line
+firstline = chdata(1:id);
+tmp = sscanf(firstline,'%g');
+columns = length(tmp);
+
 ind = findstr(variables,'"');
 xUnits = variables(ind(1)+2:ind(2)-1);
 uUnits = variables(ind(5)+2:ind(6)-1);
