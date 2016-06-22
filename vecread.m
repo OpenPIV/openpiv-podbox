@@ -1,15 +1,15 @@
 function [varargout] = vecread(varargin)
 %VECREAD Reads *.VEC files produced by Insight 3.3 software
-% [HEADER,DATA] = VECREAD(FILENAME,HEADLINE,COLUMNS) will read the 
-% FILENAME file (with or without .vec extension), with HEADLINE, number 
+% [HEADER,DATA] = VECREAD(FILENAME,HEADLINE,COLUMNS) will read the
+% FILENAME file (with or without .vec extension), with HEADLINE, number
 % of header lines, usually 1, and COLUMNS, number of columns in the file,
 % usually 5. HEADER is a string and DATA is a 3D matrix as described below.
-%   
-% [DATA] = VECREAD(FILENAME) Reads the FILENAME.VEC to the DATA 3D matrix 
-% as described below, and default values for HEADLINE = 1, COLUMNS = 5 
+%
+% [DATA] = VECREAD(FILENAME) Reads the FILENAME.VEC to the DATA 3D matrix
+% as described below, and default values for HEADLINE = 1, COLUMNS = 5
 % (Usual 2D .vec file) are used.
 %
-% DATA(:,:,1)=X, DATA(:,:,2)=Y, DATA(:,:,3)=U, DATA(:,:,4)=V, DATA(:,;,5)=CHC. 
+% DATA(:,:,1)=X, DATA(:,:,2)=Y, DATA(:,:,3)=U, DATA(:,:,4)=V, DATA(:,;,5)=CHC.
 % (See Insight manual for more info)
 %
 %   example:
@@ -21,22 +21,20 @@ function [varargout] = vecread(varargin)
 %
 
 % Created: 21-May-2001
-% Author: Alex Liberzon 
-% E-Mail : liberzon@tx.technion.ac.il 
-% Phone : +972 (0)48 29 3861 
-% Copyright (c) 2001 Technion - Israel Institute of Technology 
+% Author: Alex Liberzon
+% Copyright (c) 2001 - 2016 OpenPIV 
 %
 % Modified at: 21-May-2001
-% $Revision: 1.0 $  $Date: 21-May-2001 09:36:48$ 
+% $Revision: 1.0 $  $Date: 21-May-2001 09:36:48$
 %
-% $Revision: 2.0 $  $Date: 21-May-2001 21:08:48$ 
+% $Revision: 2.0 $  $Date: 21-May-2001 21:08:48$
 % - change the reshaping
 % - change the inputs check
-% $Revision: 2.1 $  $Date: 27-May-2001 22:46:48$ 
+% $Revision: 2.1 $  $Date: 27-May-2001 22:46:48$
 % - minor changes of the HELP section
-% $Revision: 3.0 $  $Date: 28-May-2001 22:43:00$ 
+% $Revision: 3.0 $  $Date: 28-May-2001 22:43:00$
 % - 'Bad data' points are replaced by NaNs (>9.99e9);
-% $Revision: 3.1 $  $Date: 17-Jun-2001 21:49:00$ 
+% $Revision: 3.1 $  $Date: 17-Jun-2001 21:49:00$
 % - 'Bad data' points are replaced by 0 (zeros) (>9.99e9);
 % NaNs are not compatible with the following POD analysis
 % Modified at: June 03, 2004 by Alex Liberzon
@@ -50,14 +48,14 @@ function [varargout] = vecread(varargin)
 msg = nargchk(1,3,nargin); if ~isempty(msg), error(msg), end;
 % Defaults:
 if nargin < 3
-   varargin{3} = 5;		% default columns value   
-   if nargin < 2
-      varargin{2} = 1;	% default number of header lins
-   end
+    varargin{3} = 5;		% default columns value
+    if nargin < 2
+        varargin{2} = 1;	% default number of header lins
+    end
 end
 
 % Assign variables
-name = varargin{1};   
+name = varargin{1};
 comments = varargin{2};
 columns = varargin{3};
 
@@ -68,7 +66,7 @@ if isempty(findstr(name,'.vec')), name = strcat(name,'.vec'); end;
 fid=fopen(name,'r');
 
 if fid<0
-   errordlg('File not found');
+    errordlg('File not found');
 end
 [dch,count]=fread(fid,inf,'uchar');
 fclose(fid);
@@ -76,7 +74,7 @@ fclose(fid);
 % Reformat the data
 chdat=[dch(:)',char(13)];
 
-ind10=find(chdat==char(10));
+ind10 = find(chdat == char(10));
 chdat(ind10) = repmat(char(13),[length(ind10),1]);
 % chdat(ind10) = repmat(char(' '),[length(ind10),1]);
 
@@ -90,17 +88,17 @@ chdat(ind10) = repmat(char(13),[length(ind10),1]);
 % end
 
 % Now replace commas with spaces
-indcom=find(chdat==',');
-chdat(indcom)=repmat(char(' '),[length(indcom),1]);
+indcom = find(chdat == ',');
+chdat(indcom) = repmat(char(' '),[length(indcom),1]);
 
 %find carriage-returns
-ind13=find(chdat==char(13));
+ind13 = find(chdat == char(13));
 
 % Truncate array to just have data
 if comments==0,
-   char1=1;
+    char1=1;
 else
-   char1=ind13(comments)+1;
+    char1=ind13(comments)+1;
 end
 hdr = lower(chdat(1:char1-1));
 chdata=chdat(char1:count);
@@ -110,18 +108,23 @@ chdata=chdat(char1:count);
 % Alex, 22.02.08 - some change in VEC files - the space after variables=
 % disappeared, new columns appeared, e.g. datasetauxdata ...
 % variables = hdr(findstr(hdr,'variables=')+length('variables='):findstr(hdr,'zone')-1);
-variables = hdr(findstr(hdr,'variables=')+length('variables='):findstr(hdr,'chc')+4); % '"chc"
-% columns = length(findstr(variables,'"'))/2;
-id = findstr(chdata,[char(13),char(13)]); % double char(13) is a newline
-id = id(1); % only first line
-firstline = chdata(1:id);
-tmp = sscanf(firstline,'%g');
-columns = length(tmp);
-
-ind = findstr(variables,'"');
-xUnits = variables(ind(1)+2:ind(2)-1);
-uUnits = variables(ind(5)+2:ind(6)-1);
-data=sscanf(chdata,'%g',[columns inf])';
+try
+    variables = hdr(findstr(hdr,'variables=')+length('variables='):findstr(hdr,'chc')+4); % '"chc"
+    % columns = length(findstr(variables,'"'))/2;
+    id = findstr(chdata,char(13)); %  char(13) is a newline
+    id = id(1); % only first line
+    firstline = chdata(1:id);
+    tmp = sscanf(firstline,'%g');
+    columns = length(tmp);
+    ind = findstr(variables,'"');
+    xUnits = variables(ind(1)+2:ind(2)-1);
+    uUnits = variables(ind(5)+2:ind(6)-1);
+catch
+    columns = 5;
+    xUnits = '';
+    uUnits = '';
+end
+data = sscanf(chdata,'%g',[columns inf])';
 
 % Find and remove bad points > 9.99e9
 data(data>9e9) = 0;
@@ -139,10 +142,10 @@ data = reshape(data,[i,j,columns]);
 data = permute(data,[2 1 3]);
 
 if nargout == 1
-   varargout{1} = data;
+    varargout{1} = data;
 elseif nargout == 2
-   varargout{1} = hdr;
-   varargout{2} = data;
+    varargout{1} = hdr;
+    varargout{2} = data;
 elseif nargout == 3
     varargout{1} = xUnits;
     varargout{2} = uUnits;
@@ -153,5 +156,5 @@ elseif nargout == 4
    varargout{3} = str2num(i);
    varargout{4} = str2num(j);
 else
-   warning('Wrong number of outputs') ;
+    warning('Wrong number of outputs') ;
 end
