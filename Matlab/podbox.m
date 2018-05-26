@@ -337,7 +337,7 @@ axes(handles.axes_main); grid on; box on; axis ij;
 delete(get(handles.axes_main,'children'));
 
 
-if ~isfield(handles,'umodes') | isempty(handles.umodes)
+if ~isfield(handles,'umodes') || isempty(handles.umodes)
     handles.umodes = handles.u(:,:,1);
     handles.vmodes = handles.v(:,:,1);
 end
@@ -1175,7 +1175,7 @@ end
 
 
 handles.dx = handles.x(1,2) - handles.x(1,1);
-handles.dy = handles.y(2,1) - handles.y(1,1);
+handles.dy = handles.y(2,1) - handles.y(1,1); % sometimes negative
 handles.gridX = abs(handles.dx);
 handles.gridY = abs(handles.dy);
 

@@ -31,8 +31,8 @@ switch step
         %         for i = 1:N
         %             Uf(:,i) = U(:,i) - meanU;
         %         end
-        
-        Uf = bsxfun(@minus,U,mean(U,2));
+        meanU = mean(U,2);
+        Uf = bsxfun(@minus,U,meanU);
         
         
         %         keyboard
