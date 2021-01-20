@@ -1099,10 +1099,14 @@ try
             end
             
         case{'.txt'}
-            d = load(handles.files{1});
+            % d = load(handles.files{1});
+            d = pivlab_importmatrix(handles.files{1});
+			% [d,delim,nh] = importdata(handles.files{1}, ',', 3);
             d = repmat(d,[1 1 handles.N]);
             for i = 2:handles.N
-                d(:,:,i) = load(handles.files{i});
+                % d(:,:,i) = load(handles.files{i});
+                d(:,:,i) = pivlab_importmatrix(handles.files{i});
+				% [d(:,:,i),delim,nh] = (handles.files{i}, ',', 3);
             end
             
             x = d(:,1,:);
@@ -1133,8 +1137,8 @@ try
                 x = tmp(:,1);
                 for j = 1:length(x)
                     [m,n] = find(handles.x == x(j) & handles.y == y(j));
-                    handles.u(m,n,i) = tmp(j,3);
-                    handles.v(m,n,i) = tmp(j,4);
+                    handles.u(m,n,i) =-1* tmp(j,3);
+                    handles.v(m,n,i) = -1*tmp(j,4);
                 end
             end
             
